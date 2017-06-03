@@ -273,10 +273,16 @@ class treatmentPlanRegistrationLogic(ScriptedLoadableModuleLogic):
     icpTransform.Modified()
     icpTransform.Update()
 
-    #Assign output transform to linear transform node - current output neglects initialisation (CHANGE THIS)
-    outputTransform.SetMatrixTransformToParent(icpTransform.GetMatrix())
+    #Concatenate transforms (initial, registered) and assign to output transform node
+    concatenatedTransform = vtk.vtkTransform()
+    concatenatedTransform.Concatenate(icpTransform.GetMatrix())
+    concatenatedTransform.Concatenate(initialTransform.GetTransformToParent().GetMatrix())
 
-    #Transform moving model in scene to be aligned with fixed model (DO THIS)
+    outputTransform.SetMatrixTransformToParent(concatenatedTransform.GetMatrix())
+
+    #Transform moving model in scene to be aligned with fixed model
+    movingModel.SetAndObserveTransformNodeID(None) #remove previously applied transform (e.g. initialisation)
+    movingModel.SetAndObserveTransformNodeID(outputTransform.GetID())
 
 
 
