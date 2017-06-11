@@ -125,6 +125,21 @@ class treatmentPlanRegistrationWidget(ScriptedLoadableModuleWidget):
     parametersFormLayout.addRow("Image threshold", self.imageThresholdSliderWidget)
     """
 
+    #
+    # Plan table selector
+    #
+    self.planTableSelector = slicer.qMRMLNodeComboBox()
+    self.planTableSelector.nodeTypes = ["vtkMRMLTableNode"]
+    self.planTableSelector.selectNodeUponCreation = True
+    self.planTableSelector.addEnabled = True
+    self.planTableSelector.removeEnabled = True
+    self.planTableSelector.noneEnabled = True
+    self.planTableSelector.showHidden = False
+    self.planTableSelector.showChildNodeTypes = False
+    self.planTableSelector.setMRMLScene(slicer.mrmlScene)
+    self.planTableSelector.setToolTip(
+      "Select a table to define needles in the treatment plan. Use button below to auto-generate")
+    parametersFormLayout.addRow("Needles in Plan (table): ", self.planTableSelector)
 
     #
     # check box to trigger taking screen shots for later use in tutorials
@@ -133,6 +148,14 @@ class treatmentPlanRegistrationWidget(ScriptedLoadableModuleWidget):
     self.enableScreenshotsFlagCheckBox.checked = 0
     self.enableScreenshotsFlagCheckBox.setToolTip("If checked, take screen shots for tutorials. Use Save Data to write them to disk.")
     parametersFormLayout.addRow("Enable Screenshots", self.enableScreenshotsFlagCheckBox)
+
+    #
+    # Generate Plan Table Button
+    #
+    self.generatePlanTableButton = qt.QPushButton("Generate Plan Table")
+    self.generatePlanTableButton.toolTip = "Auto-generate plan table (all fiducials in scene)."
+    self.generatePlanTableButton.enabled = True
+    parametersFormLayout.addRow(self.generatePlanTableButton)
 
     #
     # Apply Button
@@ -144,10 +167,12 @@ class treatmentPlanRegistrationWidget(ScriptedLoadableModuleWidget):
 
     # connections
     self.applyButton.connect('clicked(bool)', self.onApplyButton)
+    self.generatePlanTableButton.connect('clicked(bool)', self.onGeneratePlanTableButton)
     self.fixedModelSelector.connect("currentNodeChanged(vtkMRMLNode*)", self.onSelect)
     self.movingModelSelector.connect("currentNodeChanged(vtkMRMLNode*)", self.onSelect)
     self.outputTransformSelector.connect("currentNodeChanged(vtkMRMLNode*)", self.onSelect)
     self.initialTransformSelector.connect("currentNodeChanged(vtkMRMLNode*)", self.onSelect)
+    self.planTableSelector.connect("currentNodeChanged(vtkMRMLNode*)", self.onSelect)
 
     # Add vertical spacer
     self.layout.addStretch(1)
@@ -164,7 +189,13 @@ class treatmentPlanRegistrationWidget(ScriptedLoadableModuleWidget):
   def onApplyButton(self):
     logic = treatmentPlanRegistrationLogic()
     enableScreenshotsFlag = self.enableScreenshotsFlagCheckBox.checked
-    logic.run(self.fixedModelSelector.currentNode(), self.movingModelSelector.currentNode(), self.initialTransformSelector.currentNode(), self.outputTransformSelector.currentNode(), enableScreenshotsFlag)
+    logic.run(self.fixedModelSelector.currentNode(), self.movingModelSelector.currentNode(),
+              self.initialTransformSelector.currentNode(), self.outputTransformSelector.currentNode(),
+              self.planTableSelector.currentNode(), enableScreenshotsFlag)
+
+  def onGeneratePlanTableButton(self):
+    logic = treatmentPlanRegistrationLogic()
+    logic.generatePlanTable()
 
 #
 # treatmentPlanRegistrationLogic
@@ -244,11 +275,29 @@ class treatmentPlanRegistrationLogic(ScriptedLoadableModuleLogic):
     annotationLogic = slicer.modules.annotations.logic()
     annotationLogic.CreateSnapShot(name, description, type, 1, imageData)
 
-  def run(self, fixedModel, movingModel, initialTransform, outputTransform, enableScreenshots=0):
+  def generatePlanTable(self):
+    tableNode = slicer.vtkMRMLTableNode()
+    col = tableNode.AddColumn()
+    col.SetName('Class')
+    col = tableNode.AddColumn()
+    col.SetName('Name')
+    col = tableNode.AddColumn()
+    col.SetName('ID')
+    className = 'vtkMRMLMarkupsFiducialNode'
+    for i in xrange(slicer.mrmlScene.GetNumberOfNodesByClass(className)):
+      tableNode.AddEmptyRow()
+      fiducials = slicer.mrmlScene.GetNthNodeByClass(i, className)
+      tableNode.SetCellText(i, 0, className)
+      tableNode.SetCellText(i, 1, fiducials.GetName())
+      tableNode.SetCellText(i, 2, fiducials.GetID())
+    slicer.mrmlScene.AddNode(tableNode)
+    print('table node auto-generated')
+
+
+  def run(self, fixedModel, movingModel, initialTransform, outputTransform, planTable, enableScreenshots=0):
     """
     Run the actual algorithm
     """
-
     if not self.isValidInputModels(fixedModel, movingModel):
       slicer.util.errorDisplay('Fixed model is the same as moving model. Choose different models.')
       return False
@@ -284,6 +333,35 @@ class treatmentPlanRegistrationLogic(ScriptedLoadableModuleLogic):
     movingModel.SetAndObserveTransformNodeID(None) #remove previously applied transform (e.g. initialisation)
     movingModel.SetAndObserveTransformNodeID(outputTransform.GetID())
 
+
+    if planTable:
+      #Write transformed needle points (from plan table) to file in IPSA format for lori's software
+      outputPath = 'C:\\Scans\\'
+      outputFilename = outputPath + 'slicerIpsaPlan.txt'
+      fileObject = open(outputFilename, 'w')
+      #write header
+      fileObject.write("""______________________________________________________________________
+
+                                 IPSA
+______________________________________________________________________
+""")
+      endText = ' inactive    unfrozen'
+      fw = 12  # float width
+
+      for i in xrange(planTable.GetNumberOfRows()):
+        points = slicer.mrmlScene.GetNodeByID(planTable.GetCellText(i,2))
+        N = points.GetNumberOfFiducials()
+        for j in xrange(N):
+          v = [0, 0, 0]
+          points.GetNthFiducialPosition(j, v)
+          v.append(1)  # make vector homogenous
+          vt = outputTransform.GetMatrixTransformFromParent().MultiplyPoint(v)  # v transformed
+          vt = vt[:3]
+          fileObject.write(
+            '{0:.6f}'.format(vt[0]).ljust(fw) + '{0:.6f}'.format(vt[1]).ljust(fw) + '{0:.6f}'.format(vt[2]).ljust(
+              fw) + str(i).center(6) + endText + '\n')
+
+      fileObject.close()
 
 
     logging.info('Processing completed')
