@@ -312,21 +312,25 @@ class SimplePhantomSegmentationLogic(ScriptedLoadableModuleLogic):
     fillHoleFilter = sitk.BinaryFillholeImageFilter()
     fillHoleFilter.SetForegroundValue(1)
     outputImage = fillHoleFilter.Execute(intermediateSegmentation)
-    outputImageName = 'outputImageFirstTry'
-    sitkUtils.PushToSlicer(outputImage, outputImageName)
+    print("The class type of outputImage is: "+ str(type(outputImage)))
+    outputImageName = outputLabelMap.GetName()#'outputImageFirstTry'
+    sitkUtils.PushToSlicer(outputImage, outputImageName,2,True) #2=label image, True = overwrite is true
 
+    """
     #Convert output of filter from scalar volume node to label map
     volumesLogic = slicer.modules.volumes.logic()
-    volumesLogic.CreateLabelVolumeFromVolume(slicer.mrmlScene, outputLabelMap, slicer.util.getNode(outputImageName) )
+    #volumesLogic.CreateLabelVolumeFromVolume(slicer.mrmlScene, outputLabelMap, slicer.util.getNode(outputImageName) )
+    volumesLogic.CreateLabelVolumeFromVolume(slicer.mrmlScene, outputLabelMap, slicer.util.getNode(outputImageName))
 
     #Remove previously created scalar volume node
     nodeToRemove=slicer.util.getNode(outputImageName)
     slicer.mrmlScene.RemoveNode(nodeToRemove)
+    """
 
     #Convert label map volume to model using Model Maker CLI module
     modelMakerParams = {}
     modelMakerParams['Name'] = outputModel.GetName()
-    modelMakerParams['InputVolume'] = outputLabelMap.GetID()
+    modelMakerParams['InputVolume'] = slicer.util.getNode(outputLabelMap.GetName()).GetID()
     modelMakerParams['FilterType'] = 'Sinc'
     modelMakerParams['StartLabel'] = -1
     modelMakerParams['EndLabel'] = -1
@@ -342,6 +346,15 @@ class SimplePhantomSegmentationLogic(ScriptedLoadableModuleLogic):
     modelMaker = slicer.modules.modelmaker
 
     cliModelMakerNode = slicer.cli.run(modelMaker, None, modelMakerParams )
+
+    """
+    labelmapVolumeNode = slicer.util.getNode(outputLabelMap.GetName())
+    seg = slicer.vtkMRMLSegmentationNode()
+    slicer.modules.segmentations.logic().ImportLabelmapToSegmentationNode(labelmapVolumeNode, seg)
+    #seg.CreateClosedSurfaceRepresentation()
+    slicer.mrmlScene.AddNode(seg)
+    slicer.mrmlScene.RemoveNode(labelmapVolumeNode)
+    """
 
     # Capture screenshot
     if enableScreenshots:
