@@ -363,6 +363,7 @@ ______________________________________________________________________
 
       fileObject.close()
 
+    logging.info('Plan saved to: ' + outputFilename)
 
     logging.info('Processing completed')
 
