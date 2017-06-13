@@ -347,7 +347,8 @@ ______________________________________________________________________
 """)
       endText = ' inactive    unfrozen'
       fw = 12  # float width
-
+      print('outputTransform is: ')
+      print(outputTransform.GetMatrixTransformFromParent())
       for i in xrange(planTable.GetNumberOfRows()):
         points = slicer.mrmlScene.GetNodeByID(planTable.GetCellText(i,2))
         N = points.GetNumberOfFiducials()
@@ -355,7 +356,7 @@ ______________________________________________________________________
           v = [0, 0, 0]
           points.GetNthFiducialPosition(j, v)
           v.append(1)  # make vector homogenous
-          vt = outputTransform.GetMatrixTransformFromParent().MultiplyPoint(v)  # v transformed
+          vt = outputTransform.GetMatrixTransformToParent().MultiplyPoint(v)  # v transformed
           vt = vt[:3]
           fileObject.write(
             '{0:.6f}'.format(vt[0]).ljust(fw) + '{0:.6f}'.format(vt[1]).ljust(fw) + '{0:.6f}'.format(vt[2]).ljust(
