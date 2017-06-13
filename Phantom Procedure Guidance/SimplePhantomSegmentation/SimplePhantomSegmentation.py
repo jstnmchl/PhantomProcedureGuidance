@@ -301,7 +301,7 @@ class SimplePhantomSegmentationLogic(ScriptedLoadableModuleLogic):
       seedPoint_ijk = mat.MultiplyPoint(seedPoint_ras)
       seedPoint_ijk = [int(x) for x in seedPoint_ijk[0:3]]
       segmentationFilter.AddSeed(seedPoint_ijk)
-      print("Adding seed at: ", seedPoint_ijk, " with intensity: ", inputImage.GetPixel(*seedPoint_ijk))
+      #print("Adding seed at: ", seedPoint_ijk, " with intensity: ", inputImage.GetPixel(*seedPoint_ijk))
 
     #Run segmentation filter
     intermediateSegmentation = segmentationFilter.Execute(inputImage)
@@ -314,6 +314,7 @@ class SimplePhantomSegmentationLogic(ScriptedLoadableModuleLogic):
     outputImage = fillHoleFilter.Execute(intermediateSegmentation)
     print("The class type of outputImage is: "+ str(type(outputImage)))
     outputImageName = outputLabelMap.GetName()#'outputImageFirstTry'
+    print(outputImageName)
     sitkUtils.PushToSlicer(outputImage, outputImageName,2,True) #2=label image, True = overwrite is true
 
     """
