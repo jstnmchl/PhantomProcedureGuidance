@@ -347,8 +347,11 @@ ______________________________________________________________________
 """)
       endText = ' inactive    unfrozen'
       fw = 12  # float width
-      print('outputTransform is: ')
-      print(outputTransform.GetMatrixTransformFromParent())
+      rasToLps = vtk.vtkMatrix4x4()
+      rasToLps.SetElement(0,0,-1)
+      rasToLps.SetElement(1,1,-1)
+      #print('outputTransform is: ')
+      #print(outputTransform.GetMatrixTransformToParent())
       for i in xrange(planTable.GetNumberOfRows()):
         points = slicer.mrmlScene.GetNodeByID(planTable.GetCellText(i,2))
         N = points.GetNumberOfFiducials()
@@ -357,6 +360,7 @@ ______________________________________________________________________
           points.GetNthFiducialPosition(j, v)
           v.append(1)  # make vector homogenous
           vt = outputTransform.GetMatrixTransformToParent().MultiplyPoint(v)  # v transformed
+          vt = rasToLps.MultiplyPoint(vt) #convert from RAS direction conventions (Slicer) to LPS dir. conv. (Dicom/in-house software)
           vt = vt[:3]
           fileObject.write(
             '{0:.6f}'.format(vt[0]).ljust(fw) + '{0:.6f}'.format(vt[1]).ljust(fw) + '{0:.6f}'.format(vt[2]).ljust(
