@@ -12,29 +12,31 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="SimplePhantomSegmentation.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="SimplePhantomSegmentation.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SimplePhantomSegmentation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="628">
-              <caret line="358" column="0" lean-forward="true" selection-start-line="358" selection-start-column="0" selection-end-line="358" selection-end-column="0" />
+            <state relative-caret-position="302">
+              <caret line="302" column="38" lean-forward="true" selection-start-line="302" selection-start-column="38" selection-end-line="302" selection-end-column="38" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
                 <element signature="e#7900#8299#1" expanded="false" />
                 <element signature="e#8342#8711#0" expanded="false" />
                 <element signature="e#8788#9345#0" expanded="false" />
                 <element signature="e#9404#10817#0" expanded="false" />
-                <element signature="e#11050#11173#0" expanded="false" />
-                <element signature="e#11218#11583#1" expanded="false" />
+                <element signature="e#10865#11091#0" expanded="false" />
+                <element signature="e#11324#11447#0" expanded="false" />
+                <element signature="e#11492#11857#1" expanded="false" />
+                <element signature="e#15689#17748#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="treatmentPlanRegistration.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="treatmentPlanRegistration.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../treatmentPlanRegistration/treatmentPlanRegistration.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="454">
-              <caret line="347" column="39" lean-forward="true" selection-start-line="347" selection-start-column="39" selection-end-line="347" selection-end-column="39" />
+            <state relative-caret-position="658">
+              <caret line="347" column="39" lean-forward="false" selection-start-line="347" selection-start-column="39" selection-end-line="347" selection-end-column="39" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
                 <element signature="e#10154#11567#0" expanded="false" />
@@ -80,6 +82,7 @@
       <find>multiply</find>
       <find>outputTransformSelector</find>
       <find>mul</find>
+      <find>range</find>
     </findStrings>
     <replaceStrings>
       <replace>outputLabelMapSelector</replace>
@@ -95,6 +98,7 @@
       <replace>planTableSelector</replace>
       <replace>generatePlanTable</replace>
       <replace>generatePlanTableButton</replace>
+      <replace>bounds</replace>
     </replaceStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -103,13 +107,13 @@
         <option value="$PROJECT_DIR$/../../../MyFirstSlicerExtension/LineIntensityProfile/testFileWrite.py" />
         <option value="$USER_HOME$/Dropbox/Masters - 1st Year/testFileWrite.py" />
         <option value="$PROJECT_DIR$/../treatmentPlanRegistration/deleteLater.py" />
-        <option value="$PROJECT_DIR$/SimplePhantomSegmentation.py" />
         <option value="$PROJECT_DIR$/../treatmentPlanRegistration/treatmentPlanRegistration.py" />
+        <option value="$PROJECT_DIR$/SimplePhantomSegmentation.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
+    <option name="x" value="-1928" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
@@ -148,6 +152,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -177,7 +182,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -350,7 +354,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-1928" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19635417" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -385,6 +389,44 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/SimplePhantomSegmentation.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6086">
+          <caret line="358" column="0" lean-forward="true" selection-start-line="358" selection-start-column="0" selection-end-line="358" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#7900#8299#1" expanded="false" />
+            <element signature="e#8342#8711#0" expanded="false" />
+            <element signature="e#8788#9345#0" expanded="false" />
+            <element signature="e#9404#10817#0" expanded="false" />
+            <element signature="e#10865#11091#0" expanded="false" />
+            <element signature="e#11324#11447#0" expanded="false" />
+            <element signature="e#11492#11857#1" expanded="false" />
+            <element signature="e#15689#17748#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Dropbox/Masters - 1st Year/testFileWrite.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../treatmentPlanRegistration/treatmentPlanRegistration.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5015">
+          <caret line="346" column="4" lean-forward="true" selection-start-line="346" selection-start-column="4" selection-end-line="346" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#10154#11567#0" expanded="false" />
+            <element signature="e#11604#12256#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimplePhantomSegmentation.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5100">
           <caret line="300" column="23" lean-forward="true" selection-start-line="300" selection-start-column="23" selection-end-line="300" selection-end-column="23" />
           <folding>
@@ -393,8 +435,10 @@
             <element signature="e#8342#8711#0" expanded="false" />
             <element signature="e#8788#9345#0" expanded="false" />
             <element signature="e#9404#10817#0" expanded="false" />
-            <element signature="e#11050#11173#0" expanded="false" />
-            <element signature="e#11218#11583#1" expanded="false" />
+            <element signature="e#10865#11091#0" expanded="false" />
+            <element signature="e#11324#11447#0" expanded="false" />
+            <element signature="e#11492#11857#1" expanded="false" />
+            <element signature="e#15689#17748#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -429,8 +473,10 @@
             <element signature="e#8342#8711#0" expanded="false" />
             <element signature="e#8788#9345#0" expanded="false" />
             <element signature="e#9404#10817#0" expanded="false" />
-            <element signature="e#11050#11173#0" expanded="false" />
-            <element signature="e#11218#11583#1" expanded="false" />
+            <element signature="e#10865#11091#0" expanded="false" />
+            <element signature="e#11324#11447#0" expanded="false" />
+            <element signature="e#11492#11857#1" expanded="false" />
+            <element signature="e#15689#17748#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -464,8 +510,10 @@
             <element signature="e#8342#8711#0" expanded="false" />
             <element signature="e#8788#9345#0" expanded="false" />
             <element signature="e#9404#10817#0" expanded="false" />
-            <element signature="e#11050#11173#0" expanded="false" />
-            <element signature="e#11218#11583#1" expanded="false" />
+            <element signature="e#10865#11091#0" expanded="false" />
+            <element signature="e#11324#11447#0" expanded="false" />
+            <element signature="e#11492#11857#1" expanded="false" />
+            <element signature="e#15689#17748#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -506,30 +554,32 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../treatmentPlanRegistration/treatmentPlanRegistration.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="658">
+          <caret line="347" column="39" lean-forward="false" selection-start-line="347" selection-start-column="39" selection-end-line="347" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#10154#11567#0" expanded="false" />
+            <element signature="e#11604#12256#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/SimplePhantomSegmentation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="628">
-          <caret line="358" column="0" lean-forward="true" selection-start-line="358" selection-start-column="0" selection-end-line="358" selection-end-column="0" />
+        <state relative-caret-position="302">
+          <caret line="302" column="38" lean-forward="true" selection-start-line="302" selection-start-column="38" selection-end-line="302" selection-end-column="38" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
             <element signature="e#7900#8299#1" expanded="false" />
             <element signature="e#8342#8711#0" expanded="false" />
             <element signature="e#8788#9345#0" expanded="false" />
             <element signature="e#9404#10817#0" expanded="false" />
-            <element signature="e#11050#11173#0" expanded="false" />
-            <element signature="e#11218#11583#1" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../treatmentPlanRegistration/treatmentPlanRegistration.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="454">
-          <caret line="347" column="39" lean-forward="true" selection-start-line="347" selection-start-column="39" selection-end-line="347" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#10154#11567#0" expanded="false" />
-            <element signature="e#11604#12256#0" expanded="false" />
+            <element signature="e#10865#11091#0" expanded="false" />
+            <element signature="e#11324#11447#0" expanded="false" />
+            <element signature="e#11492#11857#1" expanded="false" />
+            <element signature="e#15689#17748#0" expanded="false" />
           </folding>
         </state>
       </provider>

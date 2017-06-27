@@ -261,6 +261,14 @@ class SimplePhantomSegmentationLogic(ScriptedLoadableModuleLogic):
     annotationLogic = slicer.modules.annotations.logic()
     annotationLogic.CreateSnapShot(name, description, type, 1, imageData)
 
+  def isPointInBounds(self,point,bounds):
+    if (point[0] > bounds[0]) and (point[0] < bounds[1]) and (
+        point[1] > bounds[2]) and (point[1] < bounds[3]) and (
+        point[2] > bounds[4]) and (point[2] < bounds[5]):
+      return True
+    else:
+      return False
+
   def run(self, inputVolume, inputSeeds, outputLabelMap, outputModel, imageThreshold, enableScreenshots=0):
     """
     Run the actual algorithm
@@ -293,15 +301,21 @@ class SimplePhantomSegmentationLogic(ScriptedLoadableModuleLogic):
     print('Adding seeds...')
     mat = vtk.vtkMatrix4x4()
     inputVolume.GetRASToIJKMatrix(mat)
+    bounds = [0.0 for i in range(6)]
+    inputVolume.GetRASBounds(bounds)
     for i in range(numSeeds):
       seedPoint_ras = [0.0,0.0,0.0]
       inputSeeds.GetNthFiducialPosition(i,seedPoint_ras)
       print(seedPoint_ras)
-      seedPoint_ras.append(1)
-      seedPoint_ijk = mat.MultiplyPoint(seedPoint_ras)
-      seedPoint_ijk = [int(x) for x in seedPoint_ijk[0:3]]
-      segmentationFilter.AddSeed(seedPoint_ijk)
-      #print("Adding seed at: ", seedPoint_ijk, " with intensity: ", inputImage.GetPixel(*seedPoint_ijk))
+      if self.isPointInBounds(seedPoint_ras,bounds):
+        seedPoint_ras.append(1)
+        seedPoint_ijk = mat.MultiplyPoint(seedPoint_ras)
+        seedPoint_ijk = [int(x) for x in seedPoint_ijk[0:3]]
+        segmentationFilter.AddSeed(seedPoint_ijk)
+        #print("Adding seed at: ", seedPoint_ijk, " with intensity: ", inputImage.GetPixel(*seedPoint_ijk))
+      else:
+        print('Seed number ' + str(i) + ' outside of image to be segmented. Segmentation aborted.')
+        return False
 
     #Run segmentation filter
     intermediateSegmentation = segmentationFilter.Execute(inputImage)
