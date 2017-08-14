@@ -293,6 +293,40 @@ class treatmentPlanRegistrationLogic(ScriptedLoadableModuleLogic):
     slicer.mrmlScene.AddNode(tableNode)
     print('table node auto-generated')
 
+  def writePlanToFile(self,outputFilename, planTable, outputTransform):
+      # Write transformed needle points (from plan table) to file in IPSA format for lori's software
+      fileObject = open(outputFilename, 'w')
+      # write header
+      fileObject.write("""______________________________________________________________________
+                                      IPSA
+      ______________________________________________________________________
+        """)
+      endText = ' inactive    unfrozen'
+      fw = 12  # float width
+      rasToLps = vtk.vtkMatrix4x4()
+      rasToLps.SetElement(0, 0, -1)
+      rasToLps.SetElement(1, 1, -1)
+      # print('outputTransform is: ')
+      # print(outputTransform.GetMatrixTransformToParent())
+      for i in xrange(planTable.GetNumberOfRows()):
+        points = slicer.mrmlScene.GetNodeByID(planTable.GetCellText(i, 2))
+        N = points.GetNumberOfFiducials()
+        for j in xrange(N):
+          v = [0, 0, 0]
+          points.GetNthFiducialPosition(j, v)
+          v.append(1)  # make vector homogenous
+          vt = outputTransform.GetMatrixTransformToParent().MultiplyPoint(v)  # v transformed
+          vt = rasToLps.MultiplyPoint(
+            vt)  # convert from RAS direction conventions (Slicer) to LPS dir. conv. (Dicom/in-house software)
+          vt = vt[:3]
+          fileObject.write(
+            '{0:.6f}'.format(vt[0]).ljust(fw) + '{0:.6f}'.format(vt[1]).ljust(fw) + '{0:.6f}'.format(vt[2]).ljust(
+              fw) + str(i).center(6) + endText + '\n')
+
+      fileObject.close()
+
+  def writeTransformToFile(self, outputFilename, outputTransform):
+    slicer.util.saveNode(outputTransform, outputFilename)
 
   def run(self, fixedModel, movingModel, initialTransform, outputTransform, planTable, enableScreenshots=0):
     """
@@ -333,42 +367,18 @@ class treatmentPlanRegistrationLogic(ScriptedLoadableModuleLogic):
     movingModel.SetAndObserveTransformNodeID(None) #remove previously applied transform (e.g. initialisation)
     movingModel.SetAndObserveTransformNodeID(outputTransform.GetID())
 
-
     if planTable:
-      #Write transformed needle points (from plan table) to file in IPSA format for lori's software
+
       outputPath = 'C:\\Scans\\'
-      outputFilename = outputPath + 'slicerIpsaPlan.txt'
-      fileObject = open(outputFilename, 'w')
-      #write header
-      fileObject.write("""______________________________________________________________________
+      planFilename = outputPath + 'slicerIpsaPlan.txt'
+      self.writePlanToFile(planFilename, planTable, outputTransform)
+      logging.info('Plan saved to: ' + planFilename)
 
-                                 IPSA
-______________________________________________________________________
-""")
-      endText = ' inactive    unfrozen'
-      fw = 12  # float width
-      rasToLps = vtk.vtkMatrix4x4()
-      rasToLps.SetElement(0,0,-1)
-      rasToLps.SetElement(1,1,-1)
-      #print('outputTransform is: ')
-      #print(outputTransform.GetMatrixTransformToParent())
-      for i in xrange(planTable.GetNumberOfRows()):
-        points = slicer.mrmlScene.GetNodeByID(planTable.GetCellText(i,2))
-        N = points.GetNumberOfFiducials()
-        for j in xrange(N):
-          v = [0, 0, 0]
-          points.GetNthFiducialPosition(j, v)
-          v.append(1)  # make vector homogenous
-          vt = outputTransform.GetMatrixTransformToParent().MultiplyPoint(v)  # v transformed
-          vt = rasToLps.MultiplyPoint(vt) #convert from RAS direction conventions (Slicer) to LPS dir. conv. (Dicom/in-house software)
-          vt = vt[:3]
-          fileObject.write(
-            '{0:.6f}'.format(vt[0]).ljust(fw) + '{0:.6f}'.format(vt[1]).ljust(fw) + '{0:.6f}'.format(vt[2]).ljust(
-              fw) + str(i).center(6) + endText + '\n')
+      transformFilename = outputPath + 'preOpTo3DUS_fromSlicer.txt'
+      self.writeTransformToFile(transformFilename, outputTransform)
+    logging.info('Transform saved to: ' + transformFilename)
 
-      fileObject.close()
 
-    logging.info('Plan saved to: ' + outputFilename)
 
     logging.info('Processing completed')
 
