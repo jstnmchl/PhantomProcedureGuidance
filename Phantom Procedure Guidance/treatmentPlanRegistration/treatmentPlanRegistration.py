@@ -376,7 +376,7 @@ class treatmentPlanRegistrationLogic(ScriptedLoadableModuleLogic):
 
       transformFilename = outputPath + 'preOpTo3DUS_fromSlicer.txt'
       self.writeTransformToFile(transformFilename, outputTransform)
-    logging.info('Transform saved to: ' + transformFilename)
+      logging.info('Transform saved to: ' + transformFilename)
 
 
 
